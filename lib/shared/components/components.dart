@@ -49,20 +49,24 @@ Widget moviesListBuilder(context){
   );
 }
 
-Widget actorsListBuilder(context){
+Widget actorsListBuilder(context, String title){
   AppCubit cubit = AppCubit.get(context);
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 20),
-    color: const Color(0xFF101418),
+    color: title == 'BEST ACTORS' ? const Color(0xFF101418) : const Color(0xFF1E2634),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15,),
         Row(
           children: [
-            const Text('BEST ACTORS', style: const TextStyle(color: Color(0xFF5B6375), fontWeight: FontWeight.bold),),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: Text(title, style: const TextStyle(color: Color(0xFF5B6375), fontWeight: FontWeight.bold, fontSize: 18),),
+            ),
             const Spacer(),
-            TextButton(
+            if(title == 'BEST ACTORS')
+              TextButton(
               onPressed: (){},
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.only(left: 5, top: 5, bottom: 5), // and this
@@ -71,7 +75,18 @@ Widget actorsListBuilder(context){
                 'MORE ACTORS',
                 style:  TextStyle(color: Colors.white, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
               ),
-            )
+            ),
+            if(title == 'CREATORS')
+              TextButton(
+                onPressed: (){},
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.only(left: 5, top: 5, bottom: 5), // and this
+                ),
+                child: const Text(
+                  'MORE CREATORS',
+                  style:  TextStyle(color: Colors.white, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+                ),
+              ),
           ],
         ),
         SizedBox(
