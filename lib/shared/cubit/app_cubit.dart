@@ -24,7 +24,6 @@ class AppCubit extends Cubit<AppStates> {
 
   int dotIndex = 0;
   void changeDotIndex(index){
-    print(selectedCategory.length);
     // debugPrint(index.toString());
     dotIndex = index;
     emit(ChangeDotIndex());

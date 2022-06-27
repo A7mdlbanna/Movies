@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:movies_app/modules/info_screen.dart';
 
-import 'modules/home/home_screen.dart';
+import 'modules/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,6 +23,11 @@ class MyApp extends StatelessWidget {
           )
         )
       ),
+      initialRoute: '/',
+      routes: {
+        '/HomeScreen' : (context) => HomeScreen(),
+        '/InfoScreen' : (context) => InfoScreen(),
+      },
       home: const HomeScreen(),
     );
   }
