@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movies_app/shared/components/components.dart';
-import 'package:movies_app/shared/cubit/app_cubit.dart';
+import 'package:movies_app/shared/cubit/cubit.dart';
+import 'package:movies_app/models/shows.dart' as show;
+
+import '../shared/constants.dart';
+
 
 class InfoScreen extends StatefulWidget {
   const InfoScreen({Key? key}) : super(key: key);
@@ -14,6 +18,10 @@ class InfoScreen extends StatefulWidget {
 class _InfoScreenState extends State<InfoScreen> {
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    show.Results info = arguments['movie_info'];
+    print('info is ${info.title??info.name}');
+
     AppCubit cubit = AppCubit.get(context);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
     return Scaffold(
@@ -35,28 +43,28 @@ class _InfoScreenState extends State<InfoScreen> {
                     ).createShader(bounds);
                   },
                   blendMode: BlendMode.srcATop,
-                  child: Image.asset(
-                    'assets/posters/dune.png',
+                  child: Image.network(
+                    info.backdropPath!,
                     fit: BoxFit.contain,
                   ),
                 ),
                 Positioned(
-                  top: 40, left: 20,
+                  top: 30, left: 20,
                   child:  InkWell(
                   onTap: () => Navigator.pop(context),
                   child: Stack(
                     alignment: Alignment.center,
                     children: const [
-                      CircleAvatar(backgroundColor: Colors.black54, radius: 20,),
-                      ImageIcon(AssetImage('assets/icons/previous.png'), size: 25, color: Colors.white,),
+                      CircleAvatar(backgroundColor: Colors.black54, radius: 16,),
+                      ImageIcon(AssetImage('assets/icons/previous.png'), size: 16, color: Colors.white,),
                     ],
                   ),
                 ),
                 ),
                 Positioned(
-                  top: 40, right: 20,
+                  top: 30, right: 20,
                   child: IconButton(
-                      onPressed: () {}, icon: const ImageIcon(AssetImage('assets/icons/search.png'), size: 40, color: Colors.white,)),
+                      onPressed: () {}, icon: const ImageIcon(AssetImage('assets/icons/search.png'), size: 30, color: Colors.white,)),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -70,9 +78,9 @@ class _InfoScreenState extends State<InfoScreen> {
                               borderRadius: BorderRadius.circular(40),
                               color: const Color(0xFFF4C110)
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text('2021', style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.w500),),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(cubit.getReleaseDate(info.releaseDate??info.firstAirDate!), style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),),
                             ),
                           ),
                           const Spacer(),
@@ -83,20 +91,20 @@ class _InfoScreenState extends State<InfoScreen> {
                                 unratedColor: const Color(0xFF5B6375),
                                 onRatingUpdate: (rating) => cubit.changeRating(rating),
                                 itemCount: 5,
-                                itemSize: 25,
+                                itemSize: 20,
                                 initialRating: 4.5,
                                 itemPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                 ignoreGestures: true,
                               ),
                               const SizedBox(height: 5,),
-                              const Text('38875 VOTES', style: TextStyle(fontSize: 20, color: Color(0xFF5B6375), fontWeight: FontWeight.bold)),
+                              Text(info.voteCount.toString(), style: const TextStyle(fontSize: 15, color: Color(0xFF5B6375), fontWeight: FontWeight.bold)),
                             ],
                           ),
                           const SizedBox(width: 10,),
-                          const Text('9,75', style: TextStyle(fontSize: 70, color: Colors.white,),),
+                          Text(getNumber(info.voteAverage).toString(), style: const TextStyle(fontSize: 40, color: Colors.white,),),
                         ],
                       ),
-                      const Text('Dune', style: TextStyle(fontSize: 80, color: Colors.white, fontWeight: FontWeight.bold))
+                      Text(info.name?? info.title!, style: const TextStyle(fontSize: 40, color: Colors.white, fontWeight: FontWeight.bold))
                     ],
                   ),
                 )
@@ -107,31 +115,31 @@ class _InfoScreenState extends State<InfoScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  const ImageIcon(AssetImage('assets/icons/clock (1).png'), color: Color(0xFFF4C110),),
+                  const ImageIcon(AssetImage('assets/icons/clock (1).png'), color: Color(0xFFF4C110),size: 20,),
                   const SizedBox(width: 5,),
-                  const Text('2h 13min', style: TextStyle(color: Colors.white, fontSize: 18),),
+                  const Text('2h 13min', style: TextStyle(color: Colors.white, fontSize: 15),),
                   const SizedBox(width: 10,),
-                  SizedBox(
-                    height: 40,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => Container(
-                        width: 80, height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: const Color(0xFF292E3A)
+                  Expanded(
+                    child: SizedBox(
+                      height: 40,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) => Container(
+                          width: 60, height: 30,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: const Color(0xFF292E3A)
+                          ),
+                          child: const Align(
+                            alignment: Alignment.center,
+                              child: Text('Sci-Fi', style: TextStyle(color: Color(0xFFD9D7D7), fontSize: 15, fontWeight: FontWeight.w500),)),
                         ),
-                        child: Align(
-                          alignment: Alignment.center,
-                            child: Text('Sci-Fi', style: TextStyle(color: Color(0xFFD9D7D7), fontSize: 20, fontWeight: FontWeight.w500),)),
+                        separatorBuilder: (context, index) => const SizedBox(width: 10,),
+                        itemCount: info.genreIds!.length,
                       ),
-                      separatorBuilder: (context, index) => const SizedBox(width: 10,),
-                      itemCount: 3,
                     ),
                   ),
-                  Spacer(),
                   IconButton(onPressed: (){}, icon: const Icon(Icons.favorite_border, color: Colors.white, size: 30,))
                 ],
               ),
@@ -145,7 +153,7 @@ class _InfoScreenState extends State<InfoScreen> {
                 children: const[
                   Text('STORY LINE', style: TextStyle(color: Color(0xFF5B6375), fontWeight: FontWeight.bold, fontSize: 18),),
                   SizedBox(height: 10,),
-                  Text('A mythic and emotionally charged hero\'s journey, "Dune" tells the story of Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, who must travel to the most dangerous planet in the universe to ensure the future of his family and his people. As malevolent forces explode into conflict over the planet\'s exclusive supply of the most precious resource in existence-a commodity capable of unlocking humanity\'s greatest potential-only those who can conquer their fear will survive.—Warner Bros.', style: TextStyle(color: Color(0xFFD9D7D7), fontSize: 17),),
+                  Text('A mythic and emotionally charged hero\'s journey, "Dune" tells the story of Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, who must travel to the most dangerous planet in the universe to ensure the future of his family and his people. As malevolent forces explode into conflict over the planet\'s exclusive supply of the most precious resource in existence-a commodity capable of unlocking humanity\'s greatest potential-only those who can conquer their fear will survive.—Warner Bros.', style: TextStyle(color: Color(0xFFD9D7D7), fontSize: 17), overflow: TextOverflow.ellipsis, maxLines: 5,),
                 ],
               ),
             ),
@@ -157,25 +165,26 @@ class _InfoScreenState extends State<InfoScreen> {
                 children: [
                   InkWell(
                     child: Container(
-                      width: 190, height: 55,
+                      width: 140, height: 50,
                       decoration: BoxDecoration(
+                        // gradient: Gradient(colors: [Color(0xFFD79C11), Color(0xFFF5C210)]),
                         color: const Color(0xFFF5C210),
                         borderRadius: BorderRadius.circular(40)
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: const[
-                          ImageIcon(AssetImage('assets/icons/play-button.png'), color: Colors.black54,),
+                          ImageIcon(AssetImage('assets/icons/play-button.png'), color: Colors.black54, size: 20,),
                           Text('PLAY TRAILER', style: TextStyle(color: Color(
-                              0xFFEAEAEA), fontSize: 20, fontWeight: FontWeight.bold),)
+                              0xFFEAEAEA), fontSize: 14, fontWeight: FontWeight.bold),)
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(width: 22,),
+                  const SizedBox(width: 15,),
                   InkWell(
                     child: Container(
-                      width: 190, height: 55,
+                      width: 140, height: 50,
                       decoration: BoxDecoration(
                         border: Border.all(color: const Color(0xFFEAEAEA), width: 2),
                         borderRadius: BorderRadius.circular(40)
@@ -183,8 +192,8 @@ class _InfoScreenState extends State<InfoScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: const[
-                          Icon(Icons.star, color: Color(0xFFF5C210),),
-                          Text('RATE MOVIE', style: TextStyle(color: Color(0xFFEAEAEA), fontSize: 20, fontWeight: FontWeight.bold),)
+                          Icon(Icons.star, color: Color(0xFFF5C210), size: 20,),
+                          Text('RATE MOVIE', style: TextStyle(color: Color(0xFFEAEAEA), fontSize: 14, fontWeight: FontWeight.bold),)
                         ],
                       ),
                     ),
@@ -193,9 +202,9 @@ class _InfoScreenState extends State<InfoScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(height: 20,),
 
-            actorsListBuilder(context, 'ACTORS'),
+            actorsListBuilder(context, title: 'ACTORS', people: cubit.people),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -253,7 +262,7 @@ class _InfoScreenState extends State<InfoScreen> {
                 ],
               ),
             ),
-            actorsListBuilder(context, 'CREATORS'),
+            actorsListBuilder(context, title: 'CREATORS', people: cubit.people),
           ],
         ),
       ),

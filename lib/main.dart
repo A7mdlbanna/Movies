@@ -2,13 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/modules/info_screen.dart';
-import 'package:movies_app/shared/cubit/app_cubit.dart';
-import 'package:movies_app/shared/cubit/app_states.dart';
+import 'package:movies_app/shared/Network/remote/dio_helper.dart';
+import 'package:movies_app/shared/bloc_observer.dart';
+import 'package:movies_app/shared/cubit/cubit.dart';
+import 'package:movies_app/shared/cubit/states.dart';
 
 import 'modules/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  DioHelper.init();
+  BlocOverrides.runZoned(
+        () {
+      runApp(const MyApp());
+    },
+    blocObserver: MyBlocObserver(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AppCubit(),
+      create: (context) => AppCubit()..getPopularData()..getTrending(mediaType: 'all')..getPopularMovies()..getCategories(url: 'movie')..getCategoryMovies(sorting: 'popularity.desc'),
       child: BlocConsumer<AppCubit, AppStates>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -33,8 +43,8 @@ class MyApp extends StatelessWidget {
               ),
               initialRoute: '/',
               routes: {
-                '/HomeScreen': (context) => HomeScreen(),
-                '/InfoScreen': (context) => InfoScreen(),
+                '/HomeScreen': (context) => const HomeScreen(),
+                '/InfoScreen': (context) => const InfoScreen(),
               },
               home: const HomeScreen(),
             );

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:movies_app/shared/cubit/app_cubit.dart';
+import 'package:movies_app/shared/cubit/cubit.dart';
+import 'package:movies_app/models/shows.dart' as show;
+import '../../models/People/PopularPeople.dart' as person;
 
-Widget moviesListBuilder(context){
+
+import '../constants.dart';
+
+Widget moviesListBuilder(context, {bool isCategory = false, required List<dynamic> items}){
   AppCubit cubit = AppCubit.get(context);
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -11,21 +16,22 @@ Widget moviesListBuilder(context){
       physics:const BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) => InkWell(
-        onTap: () => Navigator.pushNamed(context, '/InfoScreen'),
+        onTap: () => Navigator.pushNamed(context, '/InfoScreen', arguments: {'movie_info' : items[index]}),
         child: SizedBox(
           width: 135,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Expanded(child: Image(image: AssetImage('assets/posters/full_dune.png'),)),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 3, top: 7),
-                child: Text('Dune', style: TextStyle(color: Colors.white), maxLines: 1, overflow: TextOverflow.fade,),
+              Expanded(child: Image(image: NetworkImage(items[index].posterPath??'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/movie-poster-template-design-21a1c803fe4ff4b858de24f5c91ec57f_screen.jpg?ts=1636996180'),)),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 3, top: 7),
+                child: Text(items[index].title??items[index].name!, style: const TextStyle(color: Colors.white), maxLines: 2, overflow: TextOverflow.ellipsis,),
               ),
-              Row(
+              if(items[index].voteAverage != null)
+                Row(
                 children: [
-                  Text('${cubit.rating}', style: const TextStyle(color: Colors.white),),
+                  Text('${getNumber(items[index].voteAverage, precision: 1)}', style: const TextStyle(color: Colors.white),),
                   const SizedBox(width: 10,),
                   RatingBar.builder(
                     itemBuilder: (context, index) => const Icon(Icons.star, color: Colors.amber,),
@@ -33,7 +39,7 @@ Widget moviesListBuilder(context){
                     onRatingUpdate: (rating) => cubit.changeRating(rating),
                     itemCount: 5,
                     itemSize: 15,
-                    initialRating: 4.5,
+                    initialRating: items[index].voteAverage! / 2,
                     itemPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                     ignoreGestures: true,
                   )
@@ -44,12 +50,12 @@ Widget moviesListBuilder(context){
         ),
       ),
       separatorBuilder: (context, index) => const SizedBox(width: 20,),
-      itemCount: 10,
+      itemCount: items.length,
     ),
   );
 }
 
-Widget actorsListBuilder(context, String title){
+Widget actorsListBuilder(context, {String? title, required List<person.Results> people}){
   AppCubit cubit = AppCubit.get(context);
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -58,7 +64,7 @@ Widget actorsListBuilder(context, String title){
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15,),
-        Row(
+        if(title != null)Row(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -105,7 +111,7 @@ Widget actorsListBuilder(context, String title){
                         end: Alignment.topCenter
                     ).createShader(bounds),
                     blendMode: BlendMode.srcATop,
-                    child: const Image(image: AssetImage('assets/actors/oscar.jpg'),),
+                    child: Image(image: NetworkImage(people[index].profilePath??'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/movie-poster-template-design-21a1c803fe4ff4b858de24f5c91ec57f_screen.jpg?ts=1636996180'),),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(5.0),
@@ -133,15 +139,15 @@ Widget actorsListBuilder(context, String title){
                       ),
                     ),
                   ),
-                  const Positioned(
+                  Positioned(
                       bottom: 15, left: 10,
-                      child: Text('Oscar Isaac', style: TextStyle(color: Colors.white),)
+                      child: Text(people[index].name!, style: const TextStyle(color: Colors.white),)
                   ),
                 ],
               ),
             ),
             separatorBuilder: (context, index) => const SizedBox(width: 20,),
-            itemCount: 5,
+            itemCount: people.length,
           ),
         ),
         const SizedBox(height: 30,),
