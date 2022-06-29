@@ -96,14 +96,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               alignment: Alignment.bottomLeft,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 18,
-                                    vertical: 90),
+                                    vertical: 60),
                                 child: Text(
                                   cubit.popularMovies!.results![index].name??cubit.popularMovies!.results![index].title!,
                                   style: const TextStyle(color: Color(0xFFF5F5F5),
-                                      fontSize: 50,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.w500),
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
                                 ),
                               ),
                             ),
@@ -126,9 +126,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       effect: const JumpingDotEffect(
                         dotColor: Color(0xFF434954),
                         activeDotColor: Color(0xFFF5C210),
-                        dotHeight: 10,
-                        dotWidth: 10,
-                        spacing: 15,
+                        dotHeight: 8,
+                        dotWidth: 8,
+                        spacing: 12,
                       ),
                       count: 5,
                     ),
@@ -143,12 +143,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 15,),
 
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     height: 35,
                     padding: const EdgeInsets.symmetric(horizontal: 20,),
                     child: ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) => InkWell(
@@ -162,39 +164,44 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Align(alignment: Alignment.center, child: Text(trendingCat[index], style: const TextStyle(color: Color(0xFFEBECED), fontWeight: FontWeight.w500, fontSize: 18),)),
+                              child: Align(alignment: Alignment.center, child: Text(trendingCat[index], style: const TextStyle(color: Color(0xFFEBECED), fontWeight: FontWeight.w500, fontSize: 12),)),
                             ),
                           ),
                       ),
-                      itemCount: trendingCat.length, separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 10,),
+                      itemCount: trendingCat.length, separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 5,),
                     ),
                   ),
-                  Spacer(),
-                  Container(
-                    height: 35,
-                    padding: const EdgeInsets.symmetric(horizontal: 20,),
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => InkWell(
-                        onTap: () => cubit.selectTrendingDay(index),
-                        child: Container(
-                          // constraints: BoxConstraints.tightFor(width: 80),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: cubit.selectedTrendingDay[index] ? null : Border.all(color: const Color(0xFFEBECED), width: 2),
-                              gradient: cubit.selectedTrendingDay[index] ? const LinearGradient(colors: [Color(0xFFFF9900), Color(0xFFEFC842)], ) : null,
+                  // const Spacer(),
+                  const SizedBox(height: 10,),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      height: 35,
+                      padding: const EdgeInsets.symmetric(horizontal: 20,),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => InkWell(
+                          onTap: () => cubit.selectTrendingDay(index),
+                          child: Container(
+                            // constraints: BoxConstraints.tightFor(width: 80),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: cubit.selectedTrendingDay[index] ? null : Border.all(color: const Color(0xFFEBECED), width: 2),
+                                gradient: cubit.selectedTrendingDay[index] ? const LinearGradient(colors: [Color(0xFFFF9900), Color(0xFFEFC842)], ) : null,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                child: Align(alignment: Alignment.center, child: Text(trendingCatDay[index], style: const TextStyle(color: Color(0xFFEBECED), fontWeight: FontWeight.w500, fontSize: 12),)),
+                              ),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Align(alignment: Alignment.center, child: Text(trendingCatDay[index], style: const TextStyle(color: Color(0xFFEBECED), fontWeight: FontWeight.w500, fontSize: 18),)),
-                            ),
-                          ),
+                        ),
+                        itemCount: trendingCatDay.length, separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 5,),
                       ),
-                      itemCount: trendingCatDay.length, separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 10,),
                     ),
                   ),
-                  SizedBox(width: 20,)
+                  const SizedBox(width: 20,)
                 ],
               ),
               const SizedBox(height: 15,),
@@ -227,13 +234,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         cubit.getCategoryMovies(category: cubit.moviesCategories[index].id, sorting: cubit.sorting);
                                         cubit.selectCategory(index);
                                       },
-                                      child: Text(cubit.moviesCategories[index].name!.toUpperCase(), style: TextStyle(fontSize: 15,
+                                      child: Text(cubit.moviesCategories[index].name!.toUpperCase(), style: TextStyle(fontSize: 12,
                                           fontWeight: selectedCategory[index] ? FontWeight
                                               .bold : FontWeight.w500,
                                           color: selectedCategory[index] ? const Color(0xFFFFFFFF) : const Color(0xFF4B5363)),)),
                                 ),
                             separatorBuilder: (context, index) =>
-                            const SizedBox(width: 20,),
+                            const SizedBox(width: 10,),
                             itemCount: cubit.moviesCategories.length
                         ),
                       ),
@@ -308,12 +315,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                       onSelected: (selected){
                         switch(selected){
-                          case 'Name': cubit.getCategoryMovies(sorting: cubit.isPressedSort[0] ? 'original_title.desc' : 'original_title.acs'); cubit.selectSort(0); break;
-                          case 'Popularity': cubit.getCategoryMovies(sorting: cubit.isPressedSort[1] ? 'popularity.asc' : 'popularity.desc'); cubit.selectSort(1); break;
-                          case 'Rating': cubit.getCategoryMovies(sorting: cubit.isPressedSort[2] ? 'vote_average.asc' : 'vote_average.desc'); cubit.selectSort(2); break;
-                          case 'Release date': cubit.getCategoryMovies(sorting: cubit.isPressedSort[3] ? 'release_date.asc' : 'release_date.desc'); cubit.selectSort(3); break;
-                          case 'Revenue': cubit.getCategoryMovies(sorting: cubit.isPressedSort[4] ? 'revenue.asc' : 'revenue.desc'); cubit.selectSort(4); break;
-                          case 'vote count': cubit.getCategoryMovies(sorting: cubit.isPressedSort[5] ? 'vote_count.asc' : 'vote_count.desc'); cubit.selectSort(5); break;
+                          case 'Name': cubit.getCategoryMovies(sorting: cubit.isPressedDown[0] ? 'original_title.desc' : 'original_title.acs', category: cubit.category); cubit.selectSort(0); break;
+                          case 'Popularity': cubit.getCategoryMovies(sorting: cubit.isPressedDown[1] ? 'popularity.asc' : 'popularity.desc', category: cubit.category); cubit.selectSort(1); break;
+                          case 'Rating': cubit.getCategoryMovies(sorting: cubit.isPressedDown[2] ? 'vote_average.asc' : 'vote_average.desc', category: cubit.category); cubit.selectSort(2); break;
+                          case 'Release date': cubit.getCategoryMovies(sorting: cubit.isPressedDown[3] ? 'release_date.asc' : 'release_date.desc', category: cubit.category); cubit.selectSort(3); break;
+                          case 'Revenue': cubit.getCategoryMovies(sorting: cubit.isPressedDown[4] ? 'revenue.asc' : 'revenue.desc', category: cubit.category); cubit.selectSort(4); break;
+                          case 'vote count': cubit.getCategoryMovies(sorting: cubit.isPressedDown[5] ? 'vote_count.asc' : 'vote_count.desc', category: cubit.category); cubit.selectSort(5); break;
                         }
                       },
                     ),

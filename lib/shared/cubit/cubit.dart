@@ -7,6 +7,7 @@ import 'package:movies_app/shared/Network/end_points.dart';
 import 'package:movies_app/shared/constants.dart';
 import '../../models/Categories/MoviesCategories.dart' as movies_cat;
 import '../../models/Categories/TvCategories.dart' as tv_cat;
+import '../../models/Movies/MovieCredits.dart';
 import '../../models/Movies/Movies.dart';
 import '../../models/People/PopularPeople.dart' as popular_people;
 import '../../models/shows.dart';
@@ -92,6 +93,7 @@ class AppCubit extends Cubit<AppStates> {
   List<bool> isPressedDown = List.filled(6, false);
   void selectSort(index){
     bool flag = isPressedDown[index];
+    bool flag2 = isPressedDown[index];
     isPressedSort = List.filled(6, false);
     isPressedDown = List.filled(6, false);
     isPressedSort[index] = !isPressedSort[index];
@@ -99,6 +101,14 @@ class AppCubit extends Cubit<AppStates> {
     emit(SelectSort());
   }
 
+
+  String getCatName(show.Results info, int index){
+    String? name;
+    info.mediaType == 'movie'
+        ? moviesCategories.forEach((element) {if(element.id == info.genreIds![index])name = element.name;})
+        : tvCategories.forEach((element) {if(element.id == info.genreIds![index])name = element.name;});
+    return name!;
+  }
 
 ///////////////////////////API//////////////////////////////////
 
@@ -126,7 +136,7 @@ class AppCubit extends Cubit<AppStates> {
   Future<void> getTrending({page = 1, required String mediaType, String timeWindow = 'week', bool changeCat = true,})async{
     emit(TrendingLoadingState());
     DioHelper.getData(url: 'trending/$mediaType/$timeWindow', query: {'api_key': apiKey,'page' : page}).then((value){
-      bigPrint(value.toString());
+      // bigPrint(value.toString());
       this.mediaType = mediaType;
       this.timeWindow = timeWindow;
       if(mediaType != 'person') {
@@ -143,6 +153,7 @@ class AppCubit extends Cubit<AppStates> {
         trendyPPL.addAll(popular_people.PopularPeople.fromJson(value?.data).results!);
         emit(TrendingSuccessfulState());
       }
+      shows.forEach((element) {print(element.title??element.name!);});
       // emit(TrendingSuccessfulState());
     }).catchError((error){
       debugPrint(error.toString());
@@ -171,10 +182,12 @@ class AppCubit extends Cubit<AppStates> {
   show.Shows? categoryMovies;
   List<show.Results> catMovies = [];
   late String sorting = 'popularity.desc';
+  late int category = 28;
   Future<void> getCategoryMovies({page = 1, category = 28, bool changeCat = true, required String sorting})async{
     emit(CategoryMoviesLoadingState());
     DioHelper.getData(url: 'discover/movie', query: {'api_key': apiKey,'page' : page, 'with_genres' : category, 'sort_by' : sorting}).then((value){
       this.sorting = sorting;
+      this.category = category;
       // debugPrint(value.toString());
       categoryMovies = Shows.fromJson(value?.data);
       if(changeCat)catMovies = [];
@@ -203,4 +216,25 @@ class AppCubit extends Cubit<AppStates> {
       emit(MoviesCategoriesErrorState());
     });
   }
+
+  ///////////////////////get the cast and crew for a Movie///////////////////////////////
+  MovieCredits? movieCredits;
+  List<Cast> cast = [];
+  List<Crew> crew = [];
+  Future<void> getMovieCredits({required movieId})async{
+    emit(MovieCreditsLoadingState());
+    DioHelper.getData(url: 'movie/$movieId/credits', query: {'api_key': apiKey,}).then((value){
+      debugPrint(value.toString());
+      movieCredits = MovieCredits.fromJson(value?.data);
+      cast = movieCredits!.cast!;
+      crew = movieCredits!.crew!;
+      print(cast);
+      print(crew);
+      emit(MovieCreditsSuccessfulState());
+    }).catchError((error){
+      debugPrint(error.toString());
+      emit(MovieCreditsErrorState());
+    });
+  }
+
 }

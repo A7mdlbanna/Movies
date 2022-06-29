@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AppCubit()..getPopularData()..getTrending(mediaType: 'all')..getPopularMovies()..getCategories(url: 'movie')..getCategoryMovies(sorting: 'popularity.desc'),
+      create: (context) => AppCubit()..getPopularData()..getTrending(mediaType: 'all')..getPopularMovies()..getCategories(url: 'movie')..getCategories(url: 'tv')..getCategoryMovies(sorting: 'popularity.desc'),
       child: BlocConsumer<AppCubit, AppStates>(
           listener: (context, state) {},
           builder: (context, state) {

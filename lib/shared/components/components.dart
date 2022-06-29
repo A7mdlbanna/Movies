@@ -9,13 +9,36 @@ import '../constants.dart';
 
 Widget moviesListBuilder(context, {bool isCategory = false, required List<dynamic> items}){
   AppCubit cubit = AppCubit.get(context);
+  ScrollController trendingController = ScrollController();
+  trendingController.addListener(() {
+    if(trendingController.position.pixels == trendingController.position.maxScrollExtent ){
+      cubit.getTrending(mediaType: cubit.mediaType, timeWindow: cubit.timeWindow, changeCat: false, page: cubit.trending!.page+1);
+    }
+  });
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 20),
     height: 250,
     child: ListView.separated(
       physics:const BouncingScrollPhysics(),
+      controller: trendingController,
       scrollDirection: Axis.horizontal,
-      itemBuilder: (context, index) => InkWell(
+      itemBuilder: (context, index) {
+        // if(index == items.length-1) {
+        //   return InkWell(
+        //   onTap: () {},
+        //   child: Container(
+        //     decoration: BoxDecoration(
+        //       color: Color(0xFF4B5363),
+        //       boxShadow: [BoxShadow(color: Colors.black)],
+        //         borderRadius: BorderRadius.circular(20)
+        //     ),
+        //     width: 100,
+        //     child: const Center(child: Text('load more', style: TextStyle(color: Colors.white), maxLines: 2, overflow: TextOverflow.ellipsis,)),
+        //   ),
+        // );
+        // }
+
+        return InkWell(
         onTap: () => Navigator.pushNamed(context, '/InfoScreen', arguments: {'movie_info' : items[index]}),
         child: SizedBox(
           width: 135,
@@ -23,7 +46,10 @@ Widget moviesListBuilder(context, {bool isCategory = false, required List<dynami
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: Image(image: NetworkImage(items[index].posterPath??'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/movie-poster-template-design-21a1c803fe4ff4b858de24f5c91ec57f_screen.jpg?ts=1636996180'),)),
+              Expanded(child: Container(clipBehavior: Clip.antiAliasWithSaveLayer,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20)
+                  ),child: Image(image: NetworkImage(items[index].posterPath??'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/movie-poster-template-design-21a1c803fe4ff4b858de24f5c91ec57f_screen.jpg?ts=1636996180'),))),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3, top: 7),
                 child: Text(items[index].title??items[index].name!, style: const TextStyle(color: Colors.white), maxLines: 2, overflow: TextOverflow.ellipsis,),
@@ -48,14 +74,15 @@ Widget moviesListBuilder(context, {bool isCategory = false, required List<dynami
             ],
           ),
         ),
-      ),
+      );
+      },
       separatorBuilder: (context, index) => const SizedBox(width: 20,),
       itemCount: items.length,
     ),
   );
 }
 
-Widget actorsListBuilder(context, {String? title, required List<person.Results> people}){
+Widget actorsListBuilder(context, {String? title, required List<dynamic> people}){
   AppCubit cubit = AppCubit.get(context);
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 20),

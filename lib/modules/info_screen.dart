@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movies_app/shared/components/components.dart';
 import 'package:movies_app/shared/cubit/cubit.dart';
 import 'package:movies_app/models/shows.dart' as show;
+import 'package:readmore/readmore.dart';
 
 import '../shared/constants.dart';
 
@@ -23,8 +24,9 @@ class _InfoScreenState extends State<InfoScreen> {
     print('info is ${info.title??info.name}');
 
     AppCubit cubit = AppCubit.get(context);
+    cubit.getMovieCredits(movieId: info.id);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
-    return Scaffold(
+    return cubit.cast.isEmpty || cubit.crew.isEmpty ? const Center(child: CircularProgressIndicator()) : Scaffold(
       backgroundColor: const Color(0xFF151C25),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -104,7 +106,7 @@ class _InfoScreenState extends State<InfoScreen> {
                           Text(getNumber(info.voteAverage).toString(), style: const TextStyle(fontSize: 40, color: Colors.white,),),
                         ],
                       ),
-                      Text(info.name?? info.title!, style: const TextStyle(fontSize: 40, color: Colors.white, fontWeight: FontWeight.bold))
+                      Text(info.name?? info.title!, style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold))
                     ],
                   ),
                 )
@@ -118,42 +120,49 @@ class _InfoScreenState extends State<InfoScreen> {
                   const ImageIcon(AssetImage('assets/icons/clock (1).png'), color: Color(0xFFF4C110),size: 20,),
                   const SizedBox(width: 5,),
                   const Text('2h 13min', style: TextStyle(color: Colors.white, fontSize: 15),),
-                  const SizedBox(width: 10,),
-                  Expanded(
-                    child: SizedBox(
-                      height: 40,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) => Container(
-                          width: 60, height: 30,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: const Color(0xFF292E3A)
-                          ),
-                          child: const Align(
-                            alignment: Alignment.center,
-                              child: Text('Sci-Fi', style: TextStyle(color: Color(0xFFD9D7D7), fontSize: 15, fontWeight: FontWeight.w500),)),
-                        ),
-                        separatorBuilder: (context, index) => const SizedBox(width: 10,),
-                        itemCount: info.genreIds!.length,
-                      ),
-                    ),
-                  ),
+                  Spacer(),
                   IconButton(onPressed: (){}, icon: const Icon(Icons.favorite_border, color: Colors.white, size: 30,))
                 ],
               ),
             ),
-
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              height: 40,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemBuilder: (context, index) => Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: const Color(0xFF292E3A)
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Center(child: Text(cubit.getCatName(info, index) , style: TextStyle(color: Color(0xFFD9D7D7), fontSize: 15, fontWeight: FontWeight.w500),)),
+                  ),
+                ),
+                separatorBuilder: (context, index) => const SizedBox(width: 10,),
+                itemCount: info.genreIds!.length,
+              ),
+            ),
             const SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const[
-                  Text('STORY LINE', style: TextStyle(color: Color(0xFF5B6375), fontWeight: FontWeight.bold, fontSize: 18),),
+                children: [
+                  Text('STORY LINE', style: TextStyle(color: Color(0xFF5B6375), fontWeight: FontWeight.bold, fontSize: 16),),
                   SizedBox(height: 10,),
-                  Text('A mythic and emotionally charged hero\'s journey, "Dune" tells the story of Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, who must travel to the most dangerous planet in the universe to ensure the future of his family and his people. As malevolent forces explode into conflict over the planet\'s exclusive supply of the most precious resource in existence-a commodity capable of unlocking humanity\'s greatest potential-only those who can conquer their fear will survive.—Warner Bros.', style: TextStyle(color: Color(0xFFD9D7D7), fontSize: 17), overflow: TextOverflow.ellipsis, maxLines: 5,),
+                  ReadMoreText(
+                    info.overview!,
+                    trimLines: 5,
+                    colorClickableText: Colors.blue,
+                    trimMode: TrimMode.Line,
+                    trimCollapsedText: 'Show more',
+                    trimExpandedText: 'Show less',
+                    style: TextStyle(color: Color(0xFFD9D7D7), fontSize: 17),
+                    moreStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.blue),
+                  )
                 ],
               ),
             ),
@@ -204,7 +213,7 @@ class _InfoScreenState extends State<InfoScreen> {
             ),
             const SizedBox(height: 20,),
 
-            actorsListBuilder(context, title: 'ACTORS', people: cubit.people),
+            actorsListBuilder(context, title: 'ACTORS', people: cubit.movieCredits!.cast!),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -262,7 +271,7 @@ class _InfoScreenState extends State<InfoScreen> {
                 ],
               ),
             ),
-            actorsListBuilder(context, title: 'CREATORS', people: cubit.people),
+            actorsListBuilder(context, title: 'CREATORS', people: cubit.movieCredits!.crew!),
           ],
         ),
       ),

@@ -30,6 +30,7 @@ class Results {
     this.backdropPath,
     this.genreIds,
     this.id,
+    this.mediaType,
     this.originalLanguage,
     this.originalName,
     this.originalTitle,
@@ -65,6 +66,9 @@ class Results {
     if(voteAverage is! double)voteAverage = voteAverage + 0.0;
     voteCount = json['vote_count'];
     popularity = json['popularity'];
+    mediaType = json['media_type'];
+
+    print(title??name);
   }
   bool? adult;
   String? backdropPath;
@@ -73,6 +77,7 @@ class Results {
   String? originalLanguage;
   String? originalTitle;
   String? overview;
+  String? mediaType;
   String? posterPath;
   String? releaseDate;
   String? firstAirDate;

@@ -38,3 +38,9 @@ class MoviesCategoriesErrorState extends AppStates{}
 class TvCategoriesLoadingState extends AppStates{}
 class TvCategoriesSuccessfulState extends AppStates{}
 class TvCategoriesErrorState extends AppStates{}
+
+
+
+class MovieCreditsLoadingState extends AppStates{}
+class MovieCreditsSuccessfulState extends AppStates{}
+class MovieCreditsErrorState extends AppStates{}
