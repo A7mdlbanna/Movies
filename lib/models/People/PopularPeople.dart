@@ -1,11 +1,13 @@
-class Popular {
-  Popular({
+import 'package:flutter/cupertino.dart';
+
+class PopularPeople {
+  PopularPeople({
       this.page, 
       this.results, 
       this.totalResults, 
       this.totalPages,});
 
-  Popular.fromJson(dynamic json) {
+  PopularPeople.fromJson(dynamic json) {
     page = json['page'];
     if (json['results'] != null) {
       results = [];
@@ -21,22 +23,22 @@ class Popular {
   int? totalResults;
   int? totalPages;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['page'] = page;
-    if (results != null) {
-      map['results'] = results?.map((v) => v.toJson()).toList();
-    }
-    map['total_results'] = totalResults;
-    map['total_pages'] = totalPages;
-    return map;
-  }
+  // Map<String, dynamic> toJson() {
+  //   final map = <String, dynamic>{};
+  //   map['page'] = page;
+  //   if (results != null) {
+  //     map['results'] = results?.map((v) => v.toJson()).toList();
+  //   }
+  //   map['total_results'] = totalResults;
+  //   map['total_pages'] = totalPages;
+  //   return map;
+  // }
 
 }
 
 class Results {
   Results({
-      this.profilePath, 
+      this.profilePath,
       this.adult, 
       this.id, 
       this.knownFor, 
@@ -44,7 +46,8 @@ class Results {
       this.popularity,});
 
   Results.fromJson(dynamic json) {
-    profilePath = json['profile_path'];
+    if(json['profile_path'] != null)profilePath = 'https://image.tmdb.org/t/p/original${json['profile_path']}';
+    // debugPrint(profilePath.toString());
     adult = json['adult'];
     id = json['id'];
     if (json['known_for'] != null) {
@@ -61,21 +64,7 @@ class Results {
   int? id;
   List<KnownFor>? knownFor;
   String? name;
-  double? popularity;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['profile_path'] = profilePath;
-    map['adult'] = adult;
-    map['id'] = id;
-    if (knownFor != null) {
-      map['known_for'] = knownFor?.map((v) => v.toJson()).toList();
-    }
-    map['name'] = name;
-    map['popularity'] = popularity;
-    return map;
-  }
-
+  dynamic popularity;
 }
 
 class KnownFor {
@@ -97,7 +86,7 @@ class KnownFor {
       this.voteAverage,});
 
   KnownFor.fromJson(dynamic json) {
-    posterPath = json['poster_path'];
+    if(json['poster_path'] != null)posterPath = 'https://image.tmdb.org/t/p/original${json['poster_path']}';
     adult = json['adult'];
     overview = json['overview'];
     releaseDate = json['release_date'];
@@ -124,29 +113,8 @@ class KnownFor {
   String? originalLanguage;
   String? title;
   String? backdropPath;
-  double? popularity;
+  dynamic popularity;
   int? voteCount;
   bool? video;
-  double? voteAverage;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['poster_path'] = posterPath;
-    map['adult'] = adult;
-    map['overview'] = overview;
-    map['release_date'] = releaseDate;
-    map['original_title'] = originalTitle;
-    map['genre_ids'] = genreIds;
-    map['id'] = id;
-    map['media_type'] = mediaType;
-    map['original_language'] = originalLanguage;
-    map['title'] = title;
-    map['backdrop_path'] = backdropPath;
-    map['popularity'] = popularity;
-    map['vote_count'] = voteCount;
-    map['video'] = video;
-    map['vote_average'] = voteAverage;
-    return map;
-  }
-
+  dynamic voteAverage;
 }
