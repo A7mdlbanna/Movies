@@ -68,7 +68,7 @@ class Results {
     popularity = json['popularity'];
     mediaType = json['media_type'];
 
-    print(title??name);
+    // print(title??name);
   }
   bool? adult;
   String? backdropPath;

@@ -7,7 +7,7 @@ import 'package:movies_app/shared/Network/end_points.dart';
 import 'package:movies_app/shared/constants.dart';
 import '../../models/Categories/MoviesCategories.dart' as movies_cat;
 import '../../models/Categories/TvCategories.dart' as tv_cat;
-import '../../models/Movies/MovieCredits.dart';
+import '../../models/Credits.dart';
 import '../../models/Movies/Movies.dart';
 import '../../models/People/PopularPeople.dart' as popular_people;
 import '../../models/shows.dart';
@@ -83,11 +83,35 @@ class AppCubit extends Cubit<AppStates> {
 
   List<bool> favoriteActors = List.filled(20, false);
   void favActor(index){
+    favoriteActors = List.filled(20, false);
     favoriteActors[index] = !favoriteActors[index];
     emit(SetFavActor());
   }
+  late List<bool> favoriteMovieCast;
+  void favMovieCast(index, size){
+    favoriteMovieCast = List.filled(size, false);
+    favoriteMovieCast[index] = !favoriteMovieCast[index];
+    emit(SetFavActor());
+  }
+  late List<bool> favoriteMovieCrew;
+  void favMovieCrew(index, size){
+    favoriteMovieCrew = List.filled(size, false);
+    favoriteMovieCrew[index] = !favoriteMovieCrew[index];
+    emit(SetFavActor());
+  }
+  late List<bool> favoriteTvCast;
+  void favTvCast(index, size){
+    favoriteTvCast = List.filled(size, false);
+    favoriteTvCast[index] = !favoriteTvCast[index];
+    emit(SetFavActor());
+  }
+  late List<bool> favoriteTvCrew;
+  void favTvCrew(index, size){
+    favoriteTvCrew = List.filled(size, false);
+    favoriteTvCrew[index] = !favoriteTvCrew[index];
+    emit(SetFavActor());
+  }
 
-  bool isUp = false;
 
   List<bool> isPressedSort = List.filled(6, false);
   List<bool> isPressedDown = List.filled(6, false);
@@ -102,13 +126,58 @@ class AppCubit extends Cubit<AppStates> {
   }
 
 
+  String tvCats = '';
+  String movieCats = '';
   String getCatName(show.Results info, int index){
     String? name;
-    info.mediaType == 'movie'
-        ? moviesCategories.forEach((element) {if(element.id == info.genreIds![index])name = element.name;})
-        : tvCategories.forEach((element) {if(element.id == info.genreIds![index])name = element.name;});
+    if(info.mediaType == 'movie') {
+      for(int i = 0; i < moviesCategories.length; i++){
+        if(moviesCategories[i].id == info.genreIds![index]) {
+          name = moviesCategories[i].name;
+          // emit(GetCatName());
+        }
+        }
+      } else {
+      for(int i = 0; i < tvCategories.length; i++){
+        if(tvCategories[i].id == info.genreIds![index]) {
+          name = tvCategories[i].name;
+          // emit(GetCatName());
+        }
+      }
+    }
     return name!;
   }
+
+  String getCatsNames(show.Results info){
+    String names = '';
+    if(info.mediaType == 'movie') {
+      for(int i = 0; i < info.genreIds!.length; i++){
+        for(int j = 0; j < moviesCategories.length; j++){
+          if(moviesCategories[j].id == info.genreIds![i]) {
+            if(names != '') {
+              names = '$names, ${moviesCategories[j].name}';
+            } else {
+              names = moviesCategories[j].name!;
+            }
+          }
+        }
+      }
+    } else {
+      for(int i = 0; i < info.genreIds!.length; i++){
+        for(int j = 0; j < tvCategories.length; j++){
+          if(tvCategories[j].id == info.genreIds![i]) {
+            if(names != '') {
+              names = '$names, ${tvCategories[j].name}';
+            } else {
+              names = tvCategories[j].name!;
+            }
+          }
+        }
+      }
+    }
+    return names;
+  }
+
 
 ///////////////////////////API//////////////////////////////////
 
@@ -218,18 +287,18 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   ///////////////////////get the cast and crew for a Movie///////////////////////////////
-  MovieCredits? movieCredits;
-  List<Cast> cast = [];
-  List<Crew> crew = [];
+  Credits? movieCredits;
+  List<Cast> movieCast = [];
+  List<Crew> movieCrew = [];
   Future<void> getMovieCredits({required movieId})async{
     emit(MovieCreditsLoadingState());
     DioHelper.getData(url: 'movie/$movieId/credits', query: {'api_key': apiKey,}).then((value){
-      debugPrint(value.toString());
-      movieCredits = MovieCredits.fromJson(value?.data);
-      cast = movieCredits!.cast!;
-      crew = movieCredits!.crew!;
-      print(cast);
-      print(crew);
+      // debugPrint(value.toString());
+      movieCredits = Credits.fromJson(value?.data);
+      movieCast = movieCredits!.cast!;
+      movieCrew = movieCredits!.crew!;
+      favoriteMovieCast = List.filled(movieCast.length, false);
+      favoriteMovieCrew = List.filled(movieCrew.length, false);
       emit(MovieCreditsSuccessfulState());
     }).catchError((error){
       debugPrint(error.toString());
@@ -237,4 +306,24 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+
+///////////////////////get the cast and crew for a TV Show///////////////////////////////
+  Credits? tvCredits;
+  List<Cast> tvCast = [];
+  List<Crew> tvCrew = [];
+  Future<void> getTvCredits({required tvId})async{
+    emit(TvCreditsLoadingState());
+    DioHelper.getData(url: 'tv/$tvId/credits', query: {'api_key': apiKey,}).then((value){
+      tvCredits = Credits.fromJson(value?.data);
+      // bigPrint(tvCredits!.toString());
+      tvCast = tvCredits!.cast!;
+      tvCrew = tvCredits!.crew!;
+      favoriteTvCast = List.filled(tvCast.length, false);
+      favoriteTvCrew = List.filled(tvCrew.length, false);
+      emit(TvCreditsSuccessfulState());
+    }).catchError((error){
+      debugPrint(error.toString());
+      emit(TvCreditsErrorState());
+    });
+  }
 }

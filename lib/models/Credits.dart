@@ -1,19 +1,21 @@
-class MovieCredits {
-  MovieCredits({
+class Credits {
+  Credits({
       this.id, 
       this.cast, 
       this.crew,});
 
-  MovieCredits.fromJson(dynamic json) {
+  Credits.fromJson(dynamic json) {
     id = json['id'];
     if (json['cast'] != null) {
       cast = [];
+      print(json['cast']);
       json['cast'].forEach((v) {
         cast?.add(Cast.fromJson(v));
       });
     }
     if (json['crew'] != null) {
       crew = [];
+      print(json['cast']);
       json['crew'].forEach((v) {
         crew?.add(Crew.fromJson(v));
       });
@@ -46,7 +48,7 @@ class Crew {
     name = json['name'];
     originalName = json['original_name'];
     popularity = json['popularity'];
-    profilePath = json['profile_path'];
+    if(json['profile_path'] != null)profilePath = 'https://image.tmdb.org/t/p/original${json['profile_path']}';
     creditId = json['credit_id'];
     department = json['department'];
     job = json['job'];
@@ -88,7 +90,7 @@ class Cast {
     name = json['name'];
     originalName = json['original_name'];
     popularity = json['popularity'];
-    profilePath = json['profile_path'];
+    if(json['profile_path'] != null)profilePath = 'https://image.tmdb.org/t/p/original${json['profile_path']}';
     castId = json['cast_id'];
     character = json['character'];
     creditId = json['credit_id'];

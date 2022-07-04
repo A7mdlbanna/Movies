@@ -19,9 +19,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    AppCubit cubit = AppCubit.get(context);
     SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    AppCubit cubit = AppCubit.get(context);
     selectedCategory[0] = true;
     cubit.isPressedSort[1] = true;
     cubit.isPressedDown[1] = true;
@@ -30,8 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
     CarouselController carouselController = CarouselController();
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
-      builder: (context, state) =>
-      Scaffold(
+      builder: (context, state) {
+        return Scaffold(
         backgroundColor: const Color(0xFF151C25),
         appBar: AppBar(
           elevation: 0.0,
@@ -136,9 +136,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
 
-              const Padding(
-                padding: EdgeInsets.only(left: 20.0),
-                child: Text('TRENDING TODAY', style: TextStyle(
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Text('TRENDING ${cubit.selectedTrendingDay[0] == true ? 'TODAY' : 'THIS WEEK'}', style: const TextStyle(
                     color: Color(0xFF5B6375), fontWeight: FontWeight.bold),),
               ),
               const SizedBox(height: 15,),
@@ -334,7 +334,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-      ),
+      );
+      },
     );
   }
 }

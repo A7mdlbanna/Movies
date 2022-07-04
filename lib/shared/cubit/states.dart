@@ -12,6 +12,9 @@ class SetFavActor extends AppStates{}
 class SelectSort extends AppStates{}
 
 
+class GetCatName extends AppStates{}
+
+
 
 
 class PopularPeopleLoadingState extends AppStates{}
@@ -44,3 +47,7 @@ class TvCategoriesErrorState extends AppStates{}
 class MovieCreditsLoadingState extends AppStates{}
 class MovieCreditsSuccessfulState extends AppStates{}
 class MovieCreditsErrorState extends AppStates{}
+
+class TvCreditsLoadingState extends AppStates{}
+class TvCreditsSuccessfulState extends AppStates{}
+class TvCreditsErrorState extends AppStates{}

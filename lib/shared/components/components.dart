@@ -82,8 +82,14 @@ Widget moviesListBuilder(context, {bool isCategory = false, required List<dynami
   );
 }
 
-Widget actorsListBuilder(context, {String? title, required List<dynamic> people}){
+Widget actorsListBuilder(context, {String? title, required List<dynamic> people, isMovie = true}){
   AppCubit cubit = AppCubit.get(context);
+  late List<dynamic> favList;
+  switch(title){
+    case 'BEST ACTORS': favList = cubit.favoriteActors; break;
+    case 'ACTORS': favList = isMovie ? cubit.favoriteMovieCast : cubit.favoriteTvCast; break;
+    case 'CREATORS': favList = isMovie ? cubit.favoriteMovieCrew : cubit.favoriteTvCrew; break;
+  }
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 20),
     color: title == 'BEST ACTORS' ? const Color(0xFF101418) : const Color(0xFF1E2634),
@@ -95,7 +101,7 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people}
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: Text(title, style: const TextStyle(color: Color(0xFF5B6375), fontWeight: FontWeight.bold, fontSize: 18),),
+              child: Text(title, style: const TextStyle(color: Color(0xFF5B6375), fontWeight: FontWeight.bold, fontSize: 16),),
             ),
             const Spacer(),
             if(title == 'BEST ACTORS')
@@ -144,7 +150,11 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people}
                     padding: const EdgeInsets.all(5.0),
                     child: InkWell(
                       onTap: () {
-                        cubit.favActor(index);
+                        switch(title){
+                          case 'BEST ACTORS': cubit.favActor(index); break;
+                          case 'ACTORS': isMovie ? cubit.favMovieCast(index, people.length) : cubit.favTvCast(index, people.length); break;
+                          case 'CREATORS': isMovie ? cubit.favMovieCrew(index, people.length) : cubit.favTvCrew(index, people.length); break;
+                        }
                       },
                       child: Stack(
                         alignment: Alignment.center,
@@ -153,7 +163,7 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people}
                             backgroundColor: Colors.black26,
                             radius: 18,
                           ),
-                          cubit.favoriteActors[index]
+                          favList[index]
                               ? const Icon(
                             Icons.favorite,
                             color: Colors.red,
