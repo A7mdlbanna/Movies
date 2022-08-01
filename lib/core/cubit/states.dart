@@ -9,6 +9,7 @@ class ChangeRating extends AppStates{}
 
 class SelectCategory extends AppStates{}
 class SetFavActor extends AppStates{}
+class SetFavTrendyActor extends AppStates{}
 class SelectSort extends AppStates{}
 
 

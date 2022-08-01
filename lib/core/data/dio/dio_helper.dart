@@ -12,13 +12,7 @@ class DioHelper {
   static Future<Response?> getData({
     required String url,
     query,
-    // lang = 'en',
-    // token = '',
   })async{
-    // dio?.options.headers = {
-      // 'lang' : lang,
-      // 'authorization' : token,
-    // };
     return dio?.get(
         url,
         queryParameters: query
@@ -27,13 +21,7 @@ class DioHelper {
   static Future<Response?> postData({
     required String url,
     data,
-    lang = 'en',
-    token = ''
   })async {
-    dio?.options.headers = {
-      'lang' : lang,
-      'authorization' : token,
-    };
     return dio?.post(
       url,
       data: data,

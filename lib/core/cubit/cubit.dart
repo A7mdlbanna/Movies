@@ -1,17 +1,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/models/Movies/PopularMovies.dart' as popular_movies;
-import 'package:movies_app/models/shows.dart' as show;
-import 'package:movies_app/shared/Network/end_points.dart';
-import 'package:movies_app/shared/constants.dart';
-import '../../models/Categories/MoviesCategories.dart' as movies_cat;
-import '../../models/Categories/TvCategories.dart' as tv_cat;
-import '../../models/Credits.dart';
-import '../../models/Movies/Movies.dart';
-import '../../models/People/PopularPeople.dart' as popular_people;
-import '../../models/shows.dart';
-import '../Network/remote/dio_helper.dart';
+import 'package:movies_app/core/data/reopsitery/cast_and_crew_repo.dart';
+
+import '../../core/models/Categories/MoviesCategories.dart' as movies_cat;
+import '../../core/models/Categories/TvCategories.dart' as tv_cat;
+import '../../core/models/Credits.dart';
+import '../../core/models/People/PopularPeople.dart' as popular_people;
+import '../../core/models/shows.dart' as show;
+import '../constants.dart';
+import '../data/dio/dio_helper.dart';
+import '../data/dio/end_points.dart';
 import 'states.dart';
 
 class AppCubit extends Cubit<AppStates> {
@@ -75,12 +74,12 @@ class AppCubit extends Cubit<AppStates> {
   }
 
 
-  late DateTime date;
-  String getReleaseDate(String date){
-    this.date = DateTime.parse(date);
-    return this.date.year.toString();
+  List<bool> favTrendyActor = List.filled(20, false);
+  void favTrendyPerson(index){
+    favTrendyActor = List.filled(20, false);
+    favTrendyActor[index] = !favoriteActors[index];
+    emit(SetFavTrendyActor());
   }
-
   List<bool> favoriteActors = List.filled(20, false);
   void favActor(index){
     favoriteActors = List.filled(20, false);
@@ -117,7 +116,6 @@ class AppCubit extends Cubit<AppStates> {
   List<bool> isPressedDown = List.filled(6, false);
   void selectSort(index){
     bool flag = isPressedDown[index];
-    bool flag2 = isPressedDown[index];
     isPressedSort = List.filled(6, false);
     isPressedDown = List.filled(6, false);
     isPressedSort[index] = !isPressedSort[index];
@@ -258,7 +256,7 @@ class AppCubit extends Cubit<AppStates> {
       this.sorting = sorting;
       this.category = category;
       // debugPrint(value.toString());
-      categoryMovies = Shows.fromJson(value?.data);
+      categoryMovies = show.Shows.fromJson(value?.data);
       if(changeCat)catMovies = [];
       catMovies.addAll(categoryMovies!.results!);
       emit(CategoryMoviesSuccessfulState());
@@ -287,43 +285,32 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   ///////////////////////get the cast and crew for a Movie///////////////////////////////
+  // final CastRepo repo = CastRepo();
+
   Credits? movieCredits;
   List<Cast> movieCast = [];
   List<Crew> movieCrew = [];
   Future<void> getMovieCredits({required movieId})async{
     emit(MovieCreditsLoadingState());
-    DioHelper.getData(url: 'movie/$movieId/credits', query: {'api_key': apiKey,}).then((value){
-      // debugPrint(value.toString());
-      movieCredits = Credits.fromJson(value?.data);
+      movieCredits = await CastRepo.Cast(movieId);
       movieCast = movieCredits!.cast!;
       movieCrew = movieCredits!.crew!;
       favoriteMovieCast = List.filled(movieCast.length, false);
       favoriteMovieCrew = List.filled(movieCrew.length, false);
       emit(MovieCreditsSuccessfulState());
-    }).catchError((error){
-      debugPrint(error.toString());
-      emit(MovieCreditsErrorState());
-    });
   }
-
-
-///////////////////////get the cast and crew for a TV Show///////////////////////////////
+  ///////////////////////get the cast and crew for a TV Show///////////////////////////////
   Credits? tvCredits;
   List<Cast> tvCast = [];
   List<Crew> tvCrew = [];
   Future<void> getTvCredits({required tvId})async{
     emit(TvCreditsLoadingState());
-    DioHelper.getData(url: 'tv/$tvId/credits', query: {'api_key': apiKey,}).then((value){
-      tvCredits = Credits.fromJson(value?.data);
+      tvCredits = await CastRepo.Crew(tvId);
       // bigPrint(tvCredits!.toString());
       tvCast = tvCredits!.cast!;
       tvCrew = tvCredits!.crew!;
       favoriteTvCast = List.filled(tvCast.length, false);
       favoriteTvCrew = List.filled(tvCrew.length, false);
       emit(TvCreditsSuccessfulState());
-    }).catchError((error){
-      debugPrint(error.toString());
-      emit(TvCreditsErrorState());
-    });
   }
 }
