@@ -8,7 +8,6 @@ import '../../core/models/Categories/TvCategories.dart' as tv_cat;
 import '../../core/models/Credits.dart';
 import '../../core/models/People/PopularPeople.dart' as popular_people;
 import '../../core/models/shows.dart' as show;
-import '../constants.dart';
 import '../data/dio/dio_helper.dart';
 import '../data/dio/end_points.dart';
 import 'states.dart';
@@ -26,6 +25,14 @@ class AppCubit extends Cubit<AppStates> {
     isPressedSearchIcon = !isPressedSearchIcon;
     emit(ChangeSearchIcon());
   }
+
+
+  List<bool> selectedCategory = List.filled(20, false);
+
+  List<String> trendingCat = ['All', 'Movies', 'TV Shows', 'People'];
+  List<String> trendingCatDay = ['Day', 'Week'];
+  bool isPerson = false;
+
 
   int dotIndex = 0;
   void changeDotIndex(index){

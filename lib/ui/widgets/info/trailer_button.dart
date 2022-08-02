@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/ui/resources/app_colors.dart';
+import 'package:movies_app/ui/resources/app_images_path.dart';
 
 Widget trailerButton(){
   return Padding(
@@ -17,7 +18,7 @@ Widget trailerButton(){
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ImageIcon(const AssetImage('assets/icons/play-button.png'), color: AppColors.playButtonBG, size: 20,),
+                ImageIcon(const AssetImage(AppImage.playButtonIcon), color: AppColors.playButtonBG, size: 20,),
                 Text('PLAY TRAILER', style: TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.bold),)
               ],
             ),

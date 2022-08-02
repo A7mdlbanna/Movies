@@ -3,5 +3,4 @@ class AppRoutes{
   static const String home = '/HomeScreen';
   static const String movieInfo = '/MovieInfoScreen';
   static const String actorInfo = '/ActorInfoScreen';
-
 }

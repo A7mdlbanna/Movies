@@ -38,7 +38,7 @@ class RouteGenerator{
           title: const Text('Error'),
         ),
         body: const Center(
-          child: Text('ERROR'),
+          child: Text('No Route Found'),
         ),
       );
     });

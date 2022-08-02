@@ -1,0 +1,2 @@
+double getNumber(double input, {int precision = 1}) =>
+    double.parse('$input'.substring(0, '$input'.indexOf('.') + precision + 1));

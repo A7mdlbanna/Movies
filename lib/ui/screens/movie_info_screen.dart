@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/ui/helper/app_size_boxes.dart';
 import 'package:movies_app/ui/resources/app_colors.dart';
+import 'package:movies_app/ui/resources/app_images_path.dart';
+import 'package:movies_app/ui/resources/app_strings.dart';
 import 'package:movies_app/ui/widgets/info/genres_list.dart';
 import 'package:movies_app/ui/widgets/info/overView.dart';
 import 'package:movies_app/ui/widgets/info/poster_preview.dart';
@@ -29,12 +31,12 @@ class _MovieInfoScreenState extends State<MovieInfoScreen> {
     AppCubit cubit = AppCubit.get(context);
     final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
     show.Results info = arguments['movie_info'];
-    info.mediaType == 'movie'? cubit.getMovieCredits(movieId: info.id) : cubit.getTvCredits(tvId: info.id);
+    info.mediaType == AppStrings.movie? cubit.getMovieCredits(movieId: info.id) : cubit.getTvCredits(tvId: info.id);
 
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        bool load = info.mediaType == 'movie'? (cubit.movieCast.isEmpty || cubit.movieCrew.isEmpty) : (cubit.tvCast.isEmpty || cubit.tvCrew.isEmpty);
+        bool load = info.mediaType == AppStrings.movie? (cubit.movieCast.isEmpty || cubit.movieCrew.isEmpty) : (cubit.tvCast.isEmpty || cubit.tvCrew.isEmpty);
         return load
             ? const Center(child: CircularProgressIndicator())
             : Scaffold(
@@ -50,7 +52,7 @@ class _MovieInfoScreenState extends State<MovieInfoScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        ImageIcon(const AssetImage('assets/icons/clock (1).png'), color: AppColors.yellow,size: 20,),
+                        ImageIcon(const AssetImage(AppImage.clockIcon), color: AppColors.yellow,size: 20,),
                         5.widthBox,
                         Text('2h 13min', style: TextStyle(color: AppColors.white, fontSize: 15),),
                         const Spacer(),
@@ -67,10 +69,10 @@ class _MovieInfoScreenState extends State<MovieInfoScreen> {
                   trailerButton(),
                   20.heightBox,
 
-                  actorsListBuilder(context, title: 'ACTORS', people: info.mediaType == 'movie' ? cubit.movieCredits!.cast! : cubit.tvCredits!.cast!, isMovie: info.mediaType == 'movie'),
+                  actorsListBuilder(context, title: AppStrings.actors, people: info.mediaType == AppStrings.movie ? cubit.movieCredits!.cast! : cubit.tvCredits!.cast!, isMovie: info.mediaType == AppStrings.movie),
 
                   movieInfo(info, cubit),
-                  actorsListBuilder(context, title: 'CREATORS', people: info.mediaType == 'movie' ? cubit.movieCredits!.crew! : cubit.tvCredits!.crew!, isMovie: info.mediaType == 'movie'),
+                  actorsListBuilder(context, title: AppStrings.creators, people: info.mediaType == AppStrings.movie ? cubit.movieCredits!.crew! : cubit.tvCredits!.crew!, isMovie: info.mediaType == AppStrings.movie),
                 ],
               ),
             )

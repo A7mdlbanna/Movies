@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/ui/resources/app_images_path.dart';
 
 import '../../../core/cubit/cubit.dart';
 import '../../resources/app_colors.dart';
@@ -13,7 +14,7 @@ PreferredSizeWidget flexibleAppBar(AppCubit cubit) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: ImageIcon(const AssetImage('assets/icons/list.png'), color: AppColors.white, size: 40,),
+            icon: ImageIcon(const AssetImage(AppImage.list), color: AppColors.white, size: 40,),
             onPressed: () {},
           ),
           Text(
@@ -27,8 +28,8 @@ PreferredSizeWidget flexibleAppBar(AppCubit cubit) {
             onPressed: () => cubit.changeSearchIcon(),
             icon: ImageIcon(
               AssetImage(!cubit.isPressedSearchIcon
-                  ? 'assets/icons/search.png'
-                  : 'assets/icons/search2.png'),
+                  ? AppImage.searchOutIcon
+                  : AppImage.searchFillIcon),
               color: AppColors.white,
               size: 30,
             ),

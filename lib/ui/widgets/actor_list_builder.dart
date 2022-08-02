@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/core/cubit/cubit.dart';
 import 'package:movies_app/ui/helper/app_size_boxes.dart';
+import 'package:movies_app/ui/resources/app_colors.dart';
 
 Widget actorsListBuilder(context, {String? title, required List<dynamic> people, isMovie = true}){
   AppCubit cubit = AppCubit.get(context);
@@ -13,15 +14,17 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people,
     case 'CREATORS': favList = isMovie ? cubit.favoriteMovieCrew : cubit.favoriteTvCrew; break;
   }
   ScrollController trendingController = ScrollController();
-  trendingController.addListener(() {
-    if(trendingController.position.pixels == trendingController.position.maxScrollExtent ){
-      cubit.getTrending(mediaType: cubit.mediaType, timeWindow: cubit.timeWindow, changeCat: false, page: cubit.trending!.page+1);
-    }
-  });
+  if(title == 'BEST ACTORS') {
+    trendingController.addListener(() {
+      if(trendingController.position.pixels == trendingController.position.maxScrollExtent ){
+        cubit.getPopularData(page: cubit.popularPeople!.page!+1);
+      }
+    });
+  }
 
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 20),
-    color: title == 'BEST ACTORS' ? const Color(0xFF101418) : const Color(0xFF1E2634),
+    color: title == 'BEST ACTORS' ? AppColors.segmentDark : AppColors.segmentLight,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,31 +33,8 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: Text(title, style: const TextStyle(color: Color(0xFF5B6375), fontWeight: FontWeight.bold, fontSize: 16),),
+              child: Text(title, style: TextStyle(color: AppColors.navyBlueLight, fontWeight: FontWeight.bold, fontSize: 16),),
             ),
-            const Spacer(),
-            if(title == 'BEST ACTORS')
-              TextButton(
-                onPressed: (){},
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.only(left: 5, top: 5, bottom: 5), // and this
-                ),
-                child: const Text(
-                  'MORE ACTORS',
-                  style:  TextStyle(color: Colors.white, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
-                ),
-              ),
-            if(title == 'CREATORS')
-              TextButton(
-                onPressed: (){},
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.only(left: 5, top: 5, bottom: 5), // and this
-                ),
-                child: const Text(
-                  'MORE CREATORS',
-                  style:  TextStyle(color: Colors.white, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
-                ),
-              ),
           ],
         ),
         SizedBox(
@@ -68,8 +48,8 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people,
                 alignment: Alignment.topRight,
                 children: [
                   ShaderMask(
-                    shaderCallback: (bounds) => const LinearGradient(
-                        colors: [Color(0xFF151C25), Colors.transparent],
+                    shaderCallback: (bounds) => LinearGradient(
+                        colors: [AppColors.primaryColor, Colors.transparent],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter
                     ).createShader(bounds),
@@ -95,13 +75,13 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people,
                             radius: 18,
                           ),
                           favList[index]
-                              ? const Icon(
+                              ? Icon(
                             Icons.favorite,
-                            color: Colors.red,
+                            color: AppColors.red,
                           )
-                              : const Icon(
+                              : Icon(
                             Icons.favorite_border_outlined,
-                            color: Colors.white70,
+                            color: AppColors.white,
                           ),
                         ],
                       ),
@@ -109,7 +89,7 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people,
                   ),
                   Positioned(
                       bottom: 15, left: 10,
-                      child: Text(people[index].name!, style: const TextStyle(color: Colors.white),)
+                      child: Text(people[index].name!, style: TextStyle(color: AppColors.white),)
                   ),
                 ],
               ),

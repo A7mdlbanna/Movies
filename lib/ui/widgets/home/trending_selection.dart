@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/core/cubit/cubit.dart';
 
-import '../../../core/constants.dart';
 import '../../resources/app_colors.dart';
 
 
@@ -24,11 +23,11 @@ Widget trendingTypes(AppCubit cubit){
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Align(alignment: Alignment.center, child: Text(trendingCat[index], style: TextStyle(color: AppColors.white, fontWeight: FontWeight.w500, fontSize: 12),)),
+            child: Align(alignment: Alignment.center, child: Text(cubit.trendingCat[index], style: TextStyle(color: AppColors.white, fontWeight: FontWeight.w500, fontSize: 12),)),
           ),
         ),
       ),
-      itemCount: trendingCat.length, separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 5,),
+      itemCount: cubit.trendingCat.length, separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 5,),
     ),
   );
 }
@@ -53,11 +52,11 @@ Widget trendingDays(AppCubit cubit){
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Align(alignment: Alignment.center, child: Text(trendingCatDay[index], style: TextStyle(color: AppColors.white, fontWeight: FontWeight.w500, fontSize: 12),)),
+              child: Align(alignment: Alignment.center, child: Text(cubit.trendingCatDay[index], style: TextStyle(color: AppColors.white, fontWeight: FontWeight.w500, fontSize: 12),)),
             ),
           ),
         ),
-        itemCount: trendingCatDay.length, separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 5,),
+        itemCount: cubit.trendingCatDay.length, separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 5,),
       ),
     ),
   );

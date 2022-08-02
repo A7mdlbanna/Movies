@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/ui/helper/app_size_boxes.dart';
 import 'package:movies_app/ui/resources/app_colors.dart';
+import 'package:movies_app/ui/resources/app_images_path.dart';
 import 'package:movies_app/ui/widgets/rating_bar.dart';
 
-import '../../../core/constants.dart';
 import '../../../core/cubit/cubit.dart';
 import '../../../core/models/shows.dart' as show;
 import '../../helper/app_date_formatter.dart';
+import '../../helper/user_name_formatter.dart';
 
 
 Widget posterPreview(show.Results info, context){
@@ -36,7 +37,7 @@ Widget posterPreview(show.Results info, context){
             alignment: Alignment.center,
             children: [
               CircleAvatar(backgroundColor: AppColors.playButtonBG, radius: 16,),
-              ImageIcon(const AssetImage('assets/icons/previous.png'), size: 16, color: AppColors.white,),
+              ImageIcon(const AssetImage(AppImage.backArrowIcon), size: 16, color: AppColors.white,),
             ],
           ),
         ),
@@ -44,7 +45,7 @@ Widget posterPreview(show.Results info, context){
       Positioned(
         top: 30, right: 20,
         child: IconButton(
-            onPressed: () {}, icon: ImageIcon(const AssetImage('assets/icons/search.png'), size: 30, color: AppColors.white,)),
+            onPressed: () {}, icon: ImageIcon(const AssetImage(AppImage.searchFillIcon), size: 30, color: AppColors.white,)),
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
