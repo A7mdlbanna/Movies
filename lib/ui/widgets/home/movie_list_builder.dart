@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/core/cubit/cubit.dart';
-import 'package:movies_app/ui/helper/app_size_boxes.dart';
-import 'package:movies_app/ui/helper/navigator.dart';
-import 'package:movies_app/ui/resources/app_routes.dart';
 import 'package:movies_app/ui/widgets/rating_bar.dart';
 
-import '../../helper/user_name_formatter.dart';
-import '../../resources/app_colors.dart';
+import '../../helper/index.dart';
+import '../../resources/index.dart';
 
 Widget moviesListBuilder(context, {bool isCategory = false, required List<dynamic> items}){
   AppCubit cubit = AppCubit.get(context);
@@ -35,7 +32,7 @@ Widget moviesListBuilder(context, {bool isCategory = false, required List<dynami
                 Expanded(child: Container(clipBehavior: Clip.antiAliasWithSaveLayer,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20)
-                    ),child: Image(image: NetworkImage(items[index].posterPath??'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/movie-poster-template-design-21a1c803fe4ff4b858de24f5c91ec57f_screen.jpg?ts=1636996180'),))),
+                    ),child: Image(image: NetworkImage(items[index].posterPath??AppImage.nullPoster),))),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 3, top: 7),
                   child: Text(items[index].title??items[index].name!, style: TextStyle(color: AppColors.white), maxLines: 2, overflow: TextOverflow.ellipsis,),

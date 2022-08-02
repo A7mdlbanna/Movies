@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/core/cubit/cubit.dart';
-import 'package:movies_app/ui/helper/app_size_boxes.dart';
-import 'package:movies_app/ui/resources/app_colors.dart';
-import 'package:movies_app/ui/resources/app_strings.dart';
 import 'package:movies_app/ui/widgets/home/categories_selection/popup_menu_item.dart';
 
-import '../../../resources/app_images_path.dart';
+import '../../../helper/index.dart';
+import '../../../resources/index.dart';
 
 Widget categoriesRow(AppCubit cubit){
   return Expanded(
@@ -50,21 +48,30 @@ Widget categoriesSort(AppCubit cubit){
     ),
     color: AppColors.navyBlueLight,
     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-      popUpMenuItem(cubit: cubit, index: 1, title: AppStrings.sortName),
-      popUpMenuItem(cubit: cubit, index: 2, title: AppStrings.sortPopularity),
-      popUpMenuItem(cubit: cubit, index: 3, title: AppStrings.sortRating),
-      popUpMenuItem(cubit: cubit, index: 4, title: 'Revenue'),
-      popUpMenuItem(cubit: cubit, index: 5, title: 'vote count'),
+      popUpMenuItem(cubit: cubit, index: 0, title: AppStrings.sortName),
+      popUpMenuItem(cubit: cubit, index: 1, title: AppStrings.sortPopularity),
+      popUpMenuItem(cubit: cubit, index: 2, title: AppStrings.sortRating),
+      popUpMenuItem(cubit: cubit, index: 3, title: AppStrings.sortRelease),
+      popUpMenuItem(cubit: cubit, index: 4, title: AppStrings.sortRevenue),
+      popUpMenuItem(cubit: cubit, index: 5, title: AppStrings.sortVotes),
     ],
     onSelected: (selected){
       switch(selected){
-        case AppStrings.sortName: cubit.getCategoryMovies(sorting: cubit.isPressedDown[0] ? 'original_title.desc' : 'original_title.acs', category: cubit.category); cubit.selectSort(0); break;
-        case AppStrings.sortPopularity: cubit.getCategoryMovies(sorting: cubit.isPressedDown[1] ? 'popularity.asc' : 'popularity.desc', category: cubit.category); cubit.selectSort(1); break;
-        case AppStrings.sortRating: cubit.getCategoryMovies(sorting: cubit.isPressedDown[2] ? 'vote_average.asc' : 'vote_average.desc', category: cubit.category); cubit.selectSort(2); break;
-        case 'Release date': cubit.getCategoryMovies(sorting: cubit.isPressedDown[3] ? 'release_date.asc' : 'release_date.desc', category: cubit.category); cubit.selectSort(3); break;
-        case 'Revenue': cubit.getCategoryMovies(sorting: cubit.isPressedDown[4] ? 'revenue.asc' : 'revenue.desc', category: cubit.category); cubit.selectSort(4); break;
-        case 'vote count': cubit.getCategoryMovies(sorting: cubit.isPressedDown[5] ? 'vote_count.asc' : 'vote_count.desc', category: cubit.category); cubit.selectSort(5); break;
+        case AppStrings.sortName: updateBasedOnSort(0, AppStrings.originalTitleDesc, AppStrings.originalTitleAsc, cubit); cubit.selectSort(0); break;
+        case AppStrings.sortPopularity: updateBasedOnSort(1, AppStrings.popularityAsc, AppStrings.popularityDesc, cubit); cubit.selectSort(0); break;
+        case AppStrings.sortRating: updateBasedOnSort(2, AppStrings.voteAverageAsc, AppStrings.voteAverageDesc, cubit); cubit.selectSort(0); break;
+        case AppStrings.sortRelease: updateBasedOnSort(3, AppStrings.releaseDateAsc, AppStrings.releaseDateDesc, cubit); cubit.selectSort(0); break;
+        case AppStrings.sortRevenue: updateBasedOnSort(4, AppStrings.revenueAsc, AppStrings.revenueDesc, cubit); cubit.selectSort(0); break;
+        case AppStrings.sortVotes: updateBasedOnSort(5, AppStrings.voteCountAsc, AppStrings.voteCountDesc, cubit); cubit.selectSort(0); break;
       }
     },
   );
+}
+
+void updateBasedOnSort(index, sortA, sortB, AppCubit cubit){
+  cubit.getCategoryMovies(
+      sorting: cubit.isPressedDown[index]
+          ? sortA
+          : sortB,
+      category: cubit.category);
 }

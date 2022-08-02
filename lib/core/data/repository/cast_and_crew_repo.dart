@@ -5,7 +5,7 @@ import '../dio/dio_helper.dart';
 import '../dio/end_points.dart';
 
 class CastRepo {
-  static Future<Credits> Cast(movieId) {
+  static Future<Credits> cast(movieId) {
     return DioHelper.getData(
         url: 'movie/$movieId/credits', query: {'api_key': apiKey,}).then((value) {
       return Credits.fromJson(value?.data);
@@ -14,7 +14,7 @@ class CastRepo {
     });
   }
 
-  static Future<Credits> Crew(tvId) {
+  static Future<Credits> crew(tvId) {
     return DioHelper.getData(
         url: 'tv/$tvId/credits', query: {'api_key': apiKey,}).then((value) {
       return Credits.fromJson(value?.data);

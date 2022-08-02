@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +22,7 @@ class MoviesApp extends StatelessWidget {
         ..getPopularMovies()
         ..getCategories(url: 'movie')
         ..getCategories(url: 'tv')
-        ..getCategoryMovies(sorting: 'popularity.desc'),
+        ..getCategoryMovies(sorting: AppStrings.popularityDesc),
       child: BlocConsumer<AppCubit, AppStates>(
           listener: (context, state) {},
           builder: (context, state) {

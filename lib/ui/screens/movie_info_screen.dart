@@ -6,15 +6,15 @@ import 'package:movies_app/ui/resources/app_colors.dart';
 import 'package:movies_app/ui/resources/app_images_path.dart';
 import 'package:movies_app/ui/resources/app_strings.dart';
 import 'package:movies_app/ui/widgets/info/genres_list.dart';
-import 'package:movies_app/ui/widgets/info/overView.dart';
+import 'package:movies_app/ui/widgets/info/over_view.dart';
 import 'package:movies_app/ui/widgets/info/poster_preview.dart';
-import 'package:movies_app/ui/widgets/info/trailer_button.dart';
 
 import '../../core/cubit/cubit.dart';
 import '../../core/cubit/states.dart';
 import '../../core/models/shows.dart' as show;
 import '../widgets/actor_list_builder.dart';
 import '../widgets/info/movie_info/movie_info.dart';
+import '../widgets/info/trailer_rate.dart';
 
 
 class MovieInfoScreen extends StatefulWidget {
@@ -66,7 +66,7 @@ class _MovieInfoScreenState extends State<MovieInfoScreen> {
                   overView(info),
                   20.heightBox,
 
-                  trailerButton(),
+                  trailerRate(),
                   20.heightBox,
 
                   actorsListBuilder(context, title: AppStrings.actors, people: info.mediaType == AppStrings.movie ? cubit.movieCredits!.cast! : cubit.tvCredits!.cast!, isMovie: info.mediaType == AppStrings.movie),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movies_app/ui/resources/app_colors.dart';
 
-ThemeData AppThemes(){
+ThemeData appThemes(){
   return ThemeData(
     primaryColor: AppColors.primaryColor,
     brightness: Brightness.dark,

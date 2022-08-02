@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/core/cubit/cubit.dart';
 import 'package:movies_app/ui/helper/app_size_boxes.dart';
-import 'package:movies_app/ui/resources/app_colors.dart';
+import 'package:movies_app/ui/resources/index.dart';
 
 Widget actorsListBuilder(context, {String? title, required List<dynamic> people, isMovie = true}){
   AppCubit cubit = AppCubit.get(context);
   late List<dynamic> favList;
   switch(title){
     case null: favList = cubit.favTrendyActor; break;
-    case 'BEST ACTORS': favList = cubit.favoriteActors; break;
-    case 'ACTORS': favList = isMovie ? cubit.favoriteMovieCast : cubit.favoriteTvCast; break;
-    case 'CREATORS': favList = isMovie ? cubit.favoriteMovieCrew : cubit.favoriteTvCrew; break;
+    case AppStrings.bestActors: favList = cubit.favoriteActors; break;
+    case AppStrings.actors: favList = isMovie ? cubit.favoriteMovieCast : cubit.favoriteTvCast; break;
+    case AppStrings.creators: favList = isMovie ? cubit.favoriteMovieCrew : cubit.favoriteTvCrew; break;
   }
   ScrollController trendingController = ScrollController();
-  if(title == 'BEST ACTORS') {
+  if(title == AppStrings.bestActors) {
     trendingController.addListener(() {
       if(trendingController.position.pixels == trendingController.position.maxScrollExtent ){
         cubit.getPopularData(page: cubit.popularPeople!.page!+1);
@@ -24,7 +24,7 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people,
 
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 20),
-    color: title == 'BEST ACTORS' ? AppColors.segmentDark : AppColors.segmentLight,
+    color: title == AppStrings.bestActors ? AppColors.segmentDark : AppColors.segmentLight,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -54,7 +54,7 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people,
                         end: Alignment.topCenter
                     ).createShader(bounds),
                     blendMode: BlendMode.srcATop,
-                    child: Image(image: NetworkImage(people[index].profilePath??'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/movie-poster-template-design-21a1c803fe4ff4b858de24f5c91ec57f_screen.jpg?ts=1636996180'),),
+                    child: Image(image: NetworkImage(people[index].profilePath??AppImage.nullPoster),),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(5.0),
@@ -62,16 +62,16 @@ Widget actorsListBuilder(context, {String? title, required List<dynamic> people,
                       onTap: () {
                         switch(title){
                           case null: cubit.favTrendyPerson(index); break;
-                          case 'BEST ACTORS': cubit.favActor(index); break;
-                          case 'ACTORS': isMovie ? cubit.favMovieCast(index, people.length) : cubit.favTvCast(index, people.length); break;
-                          case 'CREATORS': isMovie ? cubit.favMovieCrew(index, people.length) : cubit.favTvCrew(index, people.length); break;
+                          case AppStrings.bestActors: cubit.favActor(index); break;
+                          case AppStrings.actors: isMovie ? cubit.favMovieCast(index, people.length) : cubit.favTvCast(index, people.length); break;
+                          case AppStrings.creators: isMovie ? cubit.favMovieCrew(index, people.length) : cubit.favTvCrew(index, people.length); break;
                         }
                       },
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          const CircleAvatar(
-                            backgroundColor: Colors.black26,
+                          CircleAvatar(
+                            backgroundColor: AppColors.black,
                             radius: 18,
                           ),
                           favList[index]

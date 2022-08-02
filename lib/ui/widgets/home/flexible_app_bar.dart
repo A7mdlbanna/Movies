@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/ui/resources/app_images_path.dart';
 
 import '../../../core/cubit/cubit.dart';
-import '../../resources/app_colors.dart';
+import '../../resources/index.dart';
 
 PreferredSizeWidget flexibleAppBar(AppCubit cubit) {
   return AppBar(
@@ -18,7 +17,7 @@ PreferredSizeWidget flexibleAppBar(AppCubit cubit) {
             onPressed: () {},
           ),
           Text(
-            'Discover',
+            AppStrings.discover,
             style: TextStyle(
                 color: AppColors.white,
                 fontSize: 23,

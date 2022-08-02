@@ -34,10 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-        backgroundColor: AppColors.primaryColor,
-        appBar: flexibleAppBar(cubit),
-        body:_homeScreenBody(context, cubit),
-      );
+          backgroundColor: AppColors.primaryColor,
+          appBar: flexibleAppBar(cubit),
+          body: _homeScreenBody(context, cubit),
+        );
       },
     );
   }

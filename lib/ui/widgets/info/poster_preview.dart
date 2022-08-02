@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/ui/helper/app_size_boxes.dart';
-import 'package:movies_app/ui/resources/app_colors.dart';
-import 'package:movies_app/ui/resources/app_images_path.dart';
 import 'package:movies_app/ui/widgets/rating_bar.dart';
 
 import '../../../core/cubit/cubit.dart';
 import '../../../core/models/shows.dart' as show;
-import '../../helper/app_date_formatter.dart';
-import '../../helper/user_name_formatter.dart';
+import '../../helper/index.dart';
+import '../../resources/index.dart';
 
 
 Widget posterPreview(show.Results info, context){
@@ -36,7 +33,7 @@ Widget posterPreview(show.Results info, context){
           child: Stack(
             alignment: Alignment.center,
             children: [
-              CircleAvatar(backgroundColor: AppColors.playButtonBG, radius: 16,),
+              CircleAvatar(backgroundColor: AppColors.black, radius: 16,),
               ImageIcon(const AssetImage(AppImage.backArrowIcon), size: 16, color: AppColors.white,),
             ],
           ),

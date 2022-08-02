@@ -22,4 +22,6 @@ class AppImage{
   static const String upArrowIcon = "${icons}up-arrow.png";
   static const String downArrowIcon = "${icons}down-arrow.png";
 
+  static const String nullPoster = 'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/movie-poster-template-design-21a1c803fe4ff4b858de24f5c91ec57f_screen.jpg?ts=1636996180';
+
 }

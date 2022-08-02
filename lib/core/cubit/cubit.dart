@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/core/data/reopsitery/cast_and_crew_repo.dart';
+import 'package:movies_app/core/data/repository/cast_and_crew_repo.dart';
 
-import '../../core/models/Categories/MoviesCategories.dart' as movies_cat;
-import '../../core/models/Categories/TvCategories.dart' as tv_cat;
+import '../../core/models/Categories/movies_categories.dart' as movies_cat;
+import '../../core/models/Categories/tv_categories.dart' as tv_cat;
 import '../../core/models/Credits.dart';
-import '../../core/models/People/PopularPeople.dart' as popular_people;
+import '../../core/models/People/popular_people.dart' as popular_people;
 import '../../core/models/shows.dart' as show;
 import '../data/dio/dio_helper.dart';
 import '../data/dio/end_points.dart';
@@ -227,7 +227,7 @@ class AppCubit extends Cubit<AppStates> {
         trendyPPL.addAll(popular_people.PopularPeople.fromJson(value?.data).results!);
         emit(TrendingSuccessfulState());
       }
-      shows.forEach((element) {print(element.title??element.name!);});
+      for (var element in shows) {debugPrint(element.title??element.name!);}
       // emit(TrendingSuccessfulState());
     }).catchError((error){
       debugPrint(error.toString());
@@ -299,7 +299,7 @@ class AppCubit extends Cubit<AppStates> {
   List<Crew> movieCrew = [];
   Future<void> getMovieCredits({required movieId})async{
     emit(MovieCreditsLoadingState());
-      movieCredits = await CastRepo.Cast(movieId);
+      movieCredits = await CastRepo.cast(movieId);
       movieCast = movieCredits!.cast!;
       movieCrew = movieCredits!.crew!;
       favoriteMovieCast = List.filled(movieCast.length, false);
@@ -312,7 +312,7 @@ class AppCubit extends Cubit<AppStates> {
   List<Crew> tvCrew = [];
   Future<void> getTvCredits({required tvId})async{
     emit(TvCreditsLoadingState());
-      tvCredits = await CastRepo.Crew(tvId);
+      tvCredits = await CastRepo.crew(tvId);
       // bigPrint(tvCredits!.toString());
       tvCast = tvCredits!.cast!;
       tvCrew = tvCredits!.crew!;

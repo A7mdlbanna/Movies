@@ -8,14 +8,14 @@ class Credits {
     id = json['id'];
     if (json['cast'] != null) {
       cast = [];
-      print(json['cast']);
+      // print(json['cast']);
       json['cast'].forEach((v) {
         cast?.add(Cast.fromJson(v));
       });
     }
     if (json['crew'] != null) {
       crew = [];
-      print(json['cast']);
+      // print(json['cast']);
       json['crew'].forEach((v) {
         crew?.add(Crew.fromJson(v));
       });

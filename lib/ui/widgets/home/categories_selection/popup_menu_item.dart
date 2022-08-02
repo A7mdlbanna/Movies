@@ -1,8 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:movies_app/ui/resources/app_images_path.dart';
-
-import '../../../resources/app_colors.dart';
+import '../../../resources/index.dart';
 
 
 PopupMenuEntry<String> popUpMenuItem({required cubit, required index, required title}){
